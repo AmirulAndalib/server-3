@@ -27,7 +27,7 @@ import { loadState } from '@nextcloud/initial-state'
 export default class Config {
 
 	constructor() {
-		this._shareConfig = loadState('files_sharing', 'shareConfig', {})
+		this._capabilities = getCapabilities()
 	}
 
 	/**
@@ -38,7 +38,7 @@ export default class Config {
 	 * @memberof Config
 	 */
 	 get defaultPermissions() {
-		return this._shareConfig.defaultPermissions
+		return this._capabilities.files_sharing?.default_permissions
 	}
 
 	/**
@@ -49,7 +49,7 @@ export default class Config {
 	 * @memberof Config
 	 */
 	get isPublicUploadEnabled() {
-		return this._shareConfig.allowPublicUploads
+		return this._capabilities.files_sharing?.public.upload
 	}
 
 	/**
@@ -226,9 +226,9 @@ export default class Config {
 	get isMailShareAllowed() {
 		const capabilities = OC.getCapabilities()
 		// eslint-disable-next-line camelcase
-		return capabilities?.files_sharing?.sharebymail !== undefined
+		return this._capabilities?.files_sharing?.sharebymail !== undefined
 			// eslint-disable-next-line camelcase
-			&& capabilities?.files_sharing?.public?.enabled === true
+			&& this._capabilities?.files_sharing?.public?.enabled === true
 	}
 
 	/**
